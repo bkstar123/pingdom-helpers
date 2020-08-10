@@ -17,13 +17,13 @@ if ($pingdomCheck->getChecks()) {
         $checks = json_decode($pingdomCheck->result)->checks;
         $fh = fopen(__DIR__ . '/../output/' . 'pingdom_checks.csv', 'w');
         fputcsv($fh, ['Check ID', 'Created (in UTC)', 'Name', 'Hostname', 'Type', 'Verify Certificate', 'Status']);
-
         foreach ($checks as $key => $check) {
+            $hostname = idn_to_ascii(trim($check->hostname), IDNA_DEFAULT, INTL_IDNA_VARIANT_UTS46);
             fputcsv($fh, [
                 $check->id, 
                 Carbon\Carbon::createFromTimestamp($check->created)->setTimezone('UTC')->toDateTimeString(), 
                 $check->name, 
-                $check->hostname, 
+                $hostname, 
                 $check->type, 
                 $check->verify_certificate, 
                 $check->status
