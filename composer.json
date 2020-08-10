@@ -1,0 +1,14 @@
+{
+    "name": "tuanha/pingdomhelpers",
+    "description": "Pingdom tools",
+    "type": "library",
+    "license": "MIT",
+    "require": {
+        "symfony/dotenv": "^4.3"
+    },
+    "autoload": {
+        "psr-4": {
+            "PingdomBuddy\\": "services/"
+        }
+    }
+}
