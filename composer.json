@@ -4,7 +4,8 @@
     "type": "library",
     "license": "MIT",
     "require": {
-        "symfony/dotenv": "^4.3"
+        "symfony/dotenv": "^4.3",
+        "nesbot/carbon": "^2.38"
     },
     "autoload": {
         "psr-4": {

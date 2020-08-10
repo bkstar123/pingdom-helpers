@@ -15,18 +15,22 @@ if ($pingdomCheck->getChecks()) {
         print "Error Description: {$serverError->statusdesc}\n************\n";
     } else {
         $checks = json_decode($pingdomCheck->result)->checks;
-        $output = array_filter($checks, function ($check) {
-            return preg_match('/\|\| nopc01mstr91h8wprod/', $check->name);
-        });
-
         $fh = fopen(__DIR__ . '/../output/' . 'pingdom_checks.csv', 'w');
-        fputcsv($fh, ['Check ID', 'Name', 'Hostname', 'Status']);
+        fputcsv($fh, ['Check ID', 'Created (in UTC)', 'Name', 'Hostname', 'Type', 'Verify Certificate', 'Status']);
 
-        foreach ($output as $key => $check) {
-            fputcsv($fh, [$check->id, $check->name, $check->hostname, $check->status]);
+        foreach ($checks as $key => $check) {
+            fputcsv($fh, [
+                $check->id, 
+                Carbon\Carbon::createFromTimestamp($check->created)->setTimezone('UTC')->toDateTimeString(), 
+                $check->name, 
+                $check->hostname, 
+                $check->type, 
+                $check->verify_certificate, 
+                $check->status
+            ]);
         }
         fclose($fh);
-        print "\nDone\n";
+        print "Done\n";
     }
 } else {
     print "Failed to make request to the Pingdom\n";

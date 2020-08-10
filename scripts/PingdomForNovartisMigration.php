@@ -1,6 +1,7 @@
 <?php
 /**
  * Get the list of all Pingdom checks for Novartis migration
+ *
  * @author tuanha
  */
 require(__DIR__.'/../bootstrap.php');
@@ -18,7 +19,7 @@ if ($pingdomCheck->getChecks()) {
             return preg_match('/\|\| nopc01mstr91h8wprod/', $check->name);
         });
 
-        $fh = fopen(__DIR__ . '/../output/' . 'pingdom_checks.csv', 'w');
+        $fh = fopen(__DIR__ . '/../output/' . 'novartis_migration_pingdom_checks.csv', 'w');
         fputcsv($fh, ['Check ID', 'Name', 'Hostname', 'Status']);
 
         foreach ($output as $key => $check) {
