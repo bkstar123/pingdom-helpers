@@ -15,10 +15,12 @@ if ($pingdomCheck->getChecks()) {
         print "Error Description: {$serverError->statusdesc}\n************\n";
     } else {
         $checks = json_decode($pingdomCheck->result)->checks;
+        $hostnames = [];
         $fh = fopen(__DIR__ . '/../output/' . 'pingdom_checks.csv', 'w');
         fputcsv($fh, ['Check ID', 'Created (in UTC)', 'Name', 'Hostname', 'Type', 'Verify Certificate', 'Status']);
         foreach ($checks as $key => $check) {
-            $hostname = idn_to_ascii(trim($check->hostname), IDNA_DEFAULT, INTL_IDNA_VARIANT_UTS46);
+            $hostname = trim($check->hostname);
+            array_push($hostnames, trim($hostname));
             fputcsv($fh, [
                 $check->id, 
                 Carbon\Carbon::createFromTimestamp($check->created)->setTimezone('UTC')->toDateTimeString(), 
@@ -29,6 +31,13 @@ if ($pingdomCheck->getChecks()) {
                 $check->status
             ]);
         }
+        fclose($fh);
+        $occurrences = array_count_values($hostnames);
+        $duplicatedCheckHostnames = array_filter($hostnames, function ($hostname) use ($occurrences) {
+            return $occurrences[$hostname] > 1;
+        });
+        $fh = fopen(__DIR__ . '/../output/' . 'pingdom_check_duplicated_hostnames.csv', 'w');
+        fputs($fh, implode(',', $duplicatedCheckHostnames));
         fclose($fh);
         print "Done\n";
     }
