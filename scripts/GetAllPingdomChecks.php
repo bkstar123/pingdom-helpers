@@ -36,7 +36,7 @@ if ($pingdomCheck->getChecks()) {
         $duplicatedCheckHostnames = array_filter($hostnames, function ($hostname) use ($occurrences) {
             return $occurrences[$hostname] > 1;
         });
-        $fh = fopen(__DIR__ . '/../output/' . 'pingdom_check_duplicated_hostnames.csv', 'w');
+        $fh = fopen(__DIR__ . '/../output/' . 'pingdom_check_duplicated_hostnames.txt', 'w');
         fputs($fh, implode(',', $duplicatedCheckHostnames));
         fclose($fh);
         print "Done\n";
