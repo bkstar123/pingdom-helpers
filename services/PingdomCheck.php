@@ -13,7 +13,7 @@ class PingdomCheck extends PingdomBase
 	/**
 	 * @var $url string
 	 */
-	protected $url = '/checks';
+	protected $url = '/checks?include_tags=true';
 
 	/**
 	 * Get all Pingdom checks

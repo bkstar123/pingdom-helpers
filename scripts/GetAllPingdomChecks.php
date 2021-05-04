@@ -17,7 +17,7 @@ if ($pingdomCheck->getChecks()) {
         $checks = json_decode($pingdomCheck->result)->checks;
         $hostnames = [];
         $fh = fopen(__DIR__ . '/../output/' . 'pingdom_checks.csv', 'w');
-        fputcsv($fh, ['Check ID', 'Created (in UTC)', 'Name', 'Hostname', 'Type', 'Verify Certificate', 'Status', 'Last Check Time']);
+        fputcsv($fh, ['Check ID', 'Created (UTC)', 'Name', 'Hostname', 'Tags', 'Type', 'Verify Certificate', 'Status', 'Last Check Time (UTC)']);
         foreach ($checks as $key => $check) {
             $hostname = trim($check->hostname);
             array_push($hostnames, trim($hostname));
@@ -26,12 +26,11 @@ if ($pingdomCheck->getChecks()) {
                 Carbon\Carbon::createFromTimestamp($check->created)->setTimezone('UTC')->toDateTimeString(), 
                 $check->name, 
                 $hostname, 
+                property_exists($check, 'tags') ? json_encode(array_column($check->tags, 'name')) : '',
                 $check->type, 
                 $check->verify_certificate, 
                 $check->status,
-                property_exists($check, 'lasttesttime') ? 
-                Carbon\Carbon::createFromTimestamp($check->lasttesttime)->setTimezone('UTC')->toDateTimeString() : 
-                '',
+                property_exists($check, 'lasttesttime') ? Carbon\Carbon::createFromTimestamp($check->lasttesttime)->setTimezone('UTC')->toDateTimeString() : '',
             ]);
         }
         fclose($fh);
