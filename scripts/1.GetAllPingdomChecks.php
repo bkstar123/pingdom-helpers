@@ -8,13 +8,9 @@ require(__DIR__.'/../bootstrap.php');
 
 $pingdomCheck = new PingdomBuddy\PingdomCheck();
 
-if ($pingdomCheck->getChecks()) {
-    if (property_exists(json_decode($pingdomCheck->result), 'error')) {
-        $serverError = json_decode($pingdomCheck->result)->error;
-        print "************\nError Code: {$serverError->statuscode}\n";
-        print "Error Description: {$serverError->statusdesc}\n************\n";
-    } else {
-        $checks = json_decode($pingdomCheck->result)->checks;
+try {
+   $checks = $pingdomCheck->getChecks(); 
+   if ($checks) {
         $hostnames = [];
         $fh = fopen(__DIR__ . '/../output/' . 'pingdom_checks.csv', 'w');
         fputcsv($fh, ['Check ID', 'Created (UTC)', 'Name', 'Hostname', 'Tags', 'Type', 'Verify Certificate', 'Status', 'Last Check Time (UTC)']);
@@ -42,8 +38,12 @@ if ($pingdomCheck->getChecks()) {
         fputs($fh, implode(',', $duplicatedCheckHostnames));
         fclose($fh);
         print "Done\n";
+    } else {
+        print "Failed to make request to the Pingdom\n";
     }
-} else {
-    print "Failed to make request to the Pingdom\n";
-    print "************\n{$pingdomCheck->executionError}\n************\n";
+} catch (Exception $e) {
+    print "Error: {$e->getMessage()}\n";
 }
+
+
+

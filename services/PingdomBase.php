@@ -19,21 +19,12 @@ class PingdomBase
     protected $baseUrl;
 
     /**
-     * @var $result mixed (False | API response)
-     */
-    public $result;
-
-    /**
-     * @var $executionError string
-     */
-    public $executionError;
-
-    /**
      * Initialize new instance
      */
     public function __construct()
     {
         $this->baseUrl = 'https://api.pingdom.com/api/3.1';
+
         $this->httpCLient = curl_init();
         curl_setopt_array($this->httpCLient, [
             CURLOPT_RETURNTRANSFER => true,
@@ -50,17 +41,27 @@ class PingdomBase
 
     /**
      * Execute request to Pingdom Endpoint
-     * @return mixed
+     * @return array
      */
     protected function execute()
     {
-        $this->result = curl_exec($this->httpCLient);
-        $this->executionError = curl_error($this->httpCLient);
-        curl_close($this->httpCLient);
-        if ($this->executionError) {
-            return false;
+        $result = curl_exec($this->httpCLient);
+        $executionError = curl_error($this->httpCLient);
+        if ($executionError) {
+            return [
+                'executionStatus' => false,
+                'data' => $executionError
+            ];
         } else {
-            return true;
+            return [
+                'executionStatus' => true,
+                'data' => $result 
+            ];
         }
+    }
+
+    public function __destruct()
+    {
+        curl_close($this->httpCLient);
     }
 }
