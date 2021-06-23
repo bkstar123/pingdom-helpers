@@ -17,7 +17,8 @@ fputcsv($fh, [
     'Total Downtime (seconds)',
     'Total Uptime (seconds)',
     'Total Unknown (seconds)',
-    '% Uptime'
+    '% Uptime',
+    '% Uknown'
 ]);
 $writeToReport = function ($checkID) use ($from, $to, $fh, $pingdomCheck) {
     $fromTS = Carbon\Carbon::parse($from, 'UTC')->timestamp;
@@ -37,6 +38,7 @@ $writeToReport = function ($checkID) use ($from, $to, $fh, $pingdomCheck) {
                 $report->status->totalup,
                 $report->status->totalunknown,
                 round($report->status->totalup*100/($toTS - $fromTS), 2),
+                round($report->status->totalunknown*100/($toTS - $fromTS), 2),
             ]);
             print "$checkID => completed\n";
         } else {
@@ -49,6 +51,7 @@ $writeToReport = function ($checkID) use ($from, $to, $fh, $pingdomCheck) {
                 '',
                 '',
                 '',
+                '',
             ]);
         }
     } catch (Exception $e) {
@@ -57,6 +60,7 @@ $writeToReport = function ($checkID) use ($from, $to, $fh, $pingdomCheck) {
                 $from,
                 $to,
                 $checkID,
+                '',
                 '',
                 '',
                 '',
