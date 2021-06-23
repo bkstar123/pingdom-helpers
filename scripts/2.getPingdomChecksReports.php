@@ -18,7 +18,7 @@ fputcsv($fh, [
     'Total Uptime (seconds)',
     'Total Unknown (seconds)',
     '% Uptime',
-    '% Uknown'
+    '% Unknown'
 ]);
 $writeToReport = function ($checkID) use ($from, $to, $fh, $pingdomCheck) {
     $fromTS = Carbon\Carbon::parse($from, 'UTC')->timestamp;
