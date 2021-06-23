@@ -8,6 +8,8 @@ This repository provides some helper scripts to interact with Pingdom API.
 
 - Firstly, download the repository to your local machine and run ```composer install``` to install all the dependent packages.  
 - Rename ```.env.example``` to ```.env```, put your Pingdom API token to ```.env```  file  
+- Rename ```2.checks.example``` to ```2.checks```  
+- Rename ```2.date_range.php.example``` to ```2.date_range.php```  
 
 ### Execution
 

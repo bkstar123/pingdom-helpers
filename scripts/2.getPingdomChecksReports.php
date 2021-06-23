@@ -6,7 +6,7 @@
  */
 require(__DIR__.'/../bootstrap.php');
 require(__DIR__ . '/../input/2.date_range.php');
-$list = file_get_contents(__DIR__ . '/../input/' . $_ENV['LIST_OF_CHECKS']);
+$list = file_get_contents(__DIR__ . '/../input/2.checks');
 $checks = explode(',', $list);
 $pingdomCheck = new PingdomBuddy\PingdomCheck();
 $fh = fopen(__DIR__ . '/../output/' . 'pingdom_checks_summary_avg_reports.csv', 'w');
