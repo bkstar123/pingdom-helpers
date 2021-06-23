@@ -55,7 +55,7 @@ class PingdomBase
         } else {
             return [
                 'executionStatus' => true,
-                'data' => $result 
+                'data' => $result
             ];
         }
     }

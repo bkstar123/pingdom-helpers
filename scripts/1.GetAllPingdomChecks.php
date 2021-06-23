@@ -9,8 +9,8 @@ require(__DIR__.'/../bootstrap.php');
 $pingdomCheck = new PingdomBuddy\PingdomCheck();
 
 try {
-   $checks = $pingdomCheck->getChecks(); 
-   if ($checks) {
+    $checks = $pingdomCheck->getChecks();
+    if ($checks) {
         $hostnames = [];
         $fh = fopen(__DIR__ . '/../output/' . 'pingdom_checks.csv', 'w');
         fputcsv($fh, ['Check ID', 'Created (UTC)', 'Name', 'Hostname', 'Tags', 'Type', 'Verify Certificate', 'Status', 'Last Check Time (UTC)']);
@@ -18,13 +18,13 @@ try {
             $hostname = trim($check->hostname);
             array_push($hostnames, trim($hostname));
             fputcsv($fh, [
-                $check->id, 
-                Carbon\Carbon::createFromTimestamp($check->created)->setTimezone('UTC')->toDateTimeString(), 
-                $check->name, 
-                $hostname, 
+                $check->id,
+                Carbon\Carbon::createFromTimestamp($check->created)->setTimezone('UTC')->toDateTimeString(),
+                $check->name,
+                $hostname,
                 property_exists($check, 'tags') ? json_encode(array_column($check->tags, 'name')) : '',
-                $check->type, 
-                $check->verify_certificate, 
+                $check->type,
+                $check->verify_certificate,
                 $check->status,
                 property_exists($check, 'lasttesttime') ? Carbon\Carbon::createFromTimestamp($check->lasttesttime)->setTimezone('UTC')->toDateTimeString() : '',
             ]);
@@ -44,6 +44,3 @@ try {
 } catch (Exception $e) {
     print "Error: {$e->getMessage()}\n";
 }
-
-
-
