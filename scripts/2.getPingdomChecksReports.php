@@ -21,6 +21,7 @@ fputcsv($fh, [
     '% Unknown'
 ]);
 $writeToReport = function ($checkID) use ($from, $to, $fh, $pingdomCheck) {
+    $checkID = trim($checkID);
     $fromTS = Carbon\Carbon::parse($from, 'UTC')->timestamp;
     $toTS = Carbon\Carbon::parse($to, 'UTC')->timestamp;
     try {
