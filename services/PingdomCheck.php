@@ -43,6 +43,7 @@ class PingdomCheck extends PingdomBase
      */
     public function getCheckSummaryAvg($checkID, $from, $to)
     {
+        $checkID = trim($checkID);
         $path = "/summary.average/{$checkID}?from={$from}&to={$to}&includeuptime=true";
         curl_setopt($this->httpCLient, CURLOPT_URL, $this->baseUrl . $path);
         curl_setopt($this->httpCLient, CURLOPT_CUSTOMREQUEST, 'GET');
