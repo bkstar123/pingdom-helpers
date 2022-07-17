@@ -34,6 +34,29 @@ class PingdomCheck extends PingdomBase
     }
 
     /**
+     * Get status of given check
+     *
+     * @return false||array|throw Exception
+     */
+    public function getCheck($checkID)
+    {
+        $path = "/checks/$checkID";
+        curl_setopt($this->httpCLient, CURLOPT_URL, $this->baseUrl . $path);
+        curl_setopt($this->httpCLient, CURLOPT_CUSTOMREQUEST, 'GET');
+        $result = $this->execute();
+        if ($result['executionStatus']) {
+            if (property_exists(json_decode($result['data']), 'error')) {
+                $error =  json_decode($result['data'])->error;
+                throw new \Exception($error->errormessage);
+            } else {
+                return json_decode($result['data'])->check;
+            }
+        } else {
+            return false;
+        }
+    }
+
+    /**
      * Get a check's summary average
      *
      * @param string  $checkID
