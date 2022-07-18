@@ -20,6 +20,24 @@ fputcsv($fh, [
     '% Uptime',
     '% Unknown'
 ]);
+function readTimeForHuman($second)
+{
+    if ($second < 60) {
+        return "$second seconds";
+    } else if ($second >= 60 && $second < 3600) {
+        $extraSeconds = readTimeForHuman($second % 60);
+        $minutes = ($second - ($second % 60)) / 60;
+        return "$minutes minutes $extraSeconds";
+    } else if ($second >= 3600 && $second < 86400) {
+        $extraMinutes = readTimeForHuman($second % 3600);
+        $hours = ($second - ($second % 3600)) / 3600;
+        return "$hours hours $extraMinutes";
+    } else if ($second >= 86400) {
+        $extraHours = readTimeForHuman($second % 86400);
+        $days = ($second - ($second % 86400)) / 86400;
+        return "$days days $extraHours";
+    }
+}
 $writeToReport = function ($checkID) use ($from, $to, $fh, $pingdomCheck) {
     $checkID = trim($checkID);
     $fromTS = Carbon\Carbon::parse($from, 'UTC')->timestamp;
@@ -35,9 +53,9 @@ $writeToReport = function ($checkID) use ($from, $to, $fh, $pingdomCheck) {
                 $from,
                 $to,
                 $checkID,
-                $report->status->totaldown,
-                $report->status->totalup,
-                $report->status->totalunknown,
+                readTimeForHuman($report->status->totaldown),
+                readTimeForHuman($report->status->totalup),
+                readTimeForHuman($report->status->totalunknown),
                 round($report->status->totalup*100/($toTS - $fromTS), 2),
                 round($report->status->totalunknown*100/($toTS - $fromTS), 2),
             ]);
